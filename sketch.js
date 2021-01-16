@@ -1,65 +1,52 @@
-var ball, db, position;
+var db, GS=0, PC;
+var form, player, game;
+var allplayers;
 
 function setup(){
     createCanvas(500,500);
 
     db = firebase.database();
 
-    ball = createSprite(250,250,10,10);
-    ball.shapeColor = "red";
-
-    var locBall = db.ref("Ball/Position");
-    locBall.on("value", readPos, showErr);
+    game= new Game();
+    game.getState();
+    game.start();
 
 }
 
 function draw(){
-    background("white");
-    if(keyDown(LEFT_ARROW)){
-        changePosition(-1,0);
+    if(PC === 4){
+        game.update(1);
     }
-    else if(keyDown(RIGHT_ARROW)){
-        changePosition(1,0);
+
+    if(GS === 1){
+        clear();
+        game.play();
     }
-    else if(keyDown(UP_ARROW)){
-        changePosition(0,-1);
-    }
-    else if(keyDown(DOWN_ARROW)){
-        changePosition(0,+1);
-    }
-    drawSprites();
 }
 
-function changePosition(X,Y){
-    db.ref("Ball/Position").set({
-        x:position.x+X,
-        y:position.y+Y
-    });
-}
 
-function readPos(data){
-    position = data.val();  //copies everything from data to position
-
-    ball.x = position.x;
-    ball.y = position.y;
-
-}
-
-function showErr(){
-    console.log("ERROR!!!")
-}
 
 /*
-.ref() - refers to the location of value that we want
+OOP
+    Components of the code === real world objects
+        1. Properties
+        2. Functions
 
-READ
-.on() - turns on a listener which listens to new changes in the field
-        - 2 functions 
-            1. Reads the value - necessary
-            2. Tells us error
+    Design (class) - objects
 
-WRITE
-.set() - updates/writes that field
+    3 objects:
+        1. Form
+            - input box - name
+            - play button
+            - player info to the db
+            - new player object
 
-
+        2. Player
+            - player's info - name, rank, distance (code & db)
+            - Number of players - playercount
+        3. Game
+            - GameStates
+            WAIT (0)
+            PLAY (1)
+            END (2)
 */
