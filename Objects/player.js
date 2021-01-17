@@ -32,8 +32,6 @@ class Player{
         db.ref("Players").on("value",(info)=>{
             allplayers = info.val();
         });
-
-
     }
 
 }

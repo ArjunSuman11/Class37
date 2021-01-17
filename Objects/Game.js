@@ -32,7 +32,11 @@ class Game{
             //form to be displayed
             form.display();
         }
-
+        car1 = createSprite(100, 200);
+        car2 = createSprite(300, 200);
+        car3 = createSprite(500, 200);
+        car4 = createSprite(700, 200);
+        cars=[car1, car2, car3, car4];
     }
     
 //gameState=1
@@ -41,30 +45,33 @@ class Game{
         textSize(30);
         text("Game Start", 120 , 100);
         Player.getPlayerInfo(); //Static function being called by its class
-
+        
         //GAME STARTS
         if(allplayers !== undefined){
-            var text_Pos = 130;
-            for(var i in allplayers){
+            var carsIndex = 0;
+            var x = 0;
+            var y;
+            for(var i in allplayers){ 
+                carsIndex++;
+                x += 200;
+                y = displayHeight - allplayers[i].Distance;
+                cars[carsIndex - 1].x = x;
+                cars[carsIndex - 1].y = y;
 
                 //Identifying the currently active player
-                if(i === "Player" + player.index){
-                    fill("red");
+                if(carsIndex ===  player.index){
+                    cars[carsIndex - 1].shapeColor = "red";
+                    camera.position.x = displayWidth/2;
+                    camera.position.y = cars[carsIndex - 1].y;
                 }
-                else{
-                    fill("black");
-                }
-                text_Pos += 20;
-                textSize(15);
-                text(allplayers [i].Name + ": " + allplayers[i].Distance, 120, text_Pos);
             }
-            //Arjun: 1000
         }
 
         if(keyIsDown(UP_ARROW)&& player.index!==null){
             player.distance += 50;
             player.update();
         }
+        drawSprites();
     }
 
 //gameState=2
